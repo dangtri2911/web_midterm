@@ -1,4 +1,9 @@
 const users = [];
+const usersCredentail = {
+  "user1": "123456",
+  "user2": "123456",
+  "user3": "123456",
+}
 
 // Join user to chat
 function userJoin(id, username, room) {
@@ -32,5 +37,6 @@ module.exports = {
   userJoin,
   getCurrentUser,
   userLeave,
-  getRoomUsers
+  getRoomUsers,
+  usersCredentail
 };
