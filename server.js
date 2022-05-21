@@ -72,6 +72,11 @@ app.post("/login", (req, res) => {
   }
 });
 
+app.get("/demo", (req, res) => {
+  res.json(usersCredentail);
+  return;
+})
+
 io.on("connection", (socket) => {
   socket.on("joinRoom", ({ username, room }) => {
     const user = userJoin(socket.id, username, room);
