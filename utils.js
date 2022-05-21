@@ -4,10 +4,11 @@ function generateToken(username){
     return jwt.sign({ username: username }, process.env.SECRET_KEY);
 }
 
-function getCurrentUsername(token){
+function getCurrentUserdata(req){
     try {
-        const data = jwt.verify(token, process.env.SECRET_KEY);
-        return data['username'];
+        return req.cookies[process.env.TOKEN]
+        ? jwt.verify(req.cookies[process.env.TOKEN], process.env.SECRET_KEY)['user_id']
+        : null;
     } catch (error) {
         return null;
     }
@@ -15,5 +16,5 @@ function getCurrentUsername(token){
 
 module.exports = {
     generateToken,
-    getCurrentUsername
+    getCurrentUserdata
 };

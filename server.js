@@ -4,7 +4,7 @@ const express = require("express");
 const socketio = require("socket.io");
 const formatMessage = require("./utils/messages");
 const cookieParser = require("cookie-parser");
-var bodyParser = require('body-parser');
+var bodyParser = require("body-parser");
 
 require("dotenv").config();
 const {
@@ -14,20 +14,33 @@ const {
   getRoomUsers,
   usersCredentail,
 } = require("./utils/users");
-const { generateToken } = require("./utils");
+const { generateToken, getCurrentUserdata } = require("./utils");
 
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 const botName = "Bot";
-const fileUpload = require('express-fileupload');
+const fileUpload = require("express-fileupload");
+
+app.use((req, res, next) => {
+  if(req.url === "/chat.html"){
+    if(!req.cookies || !req.cookies[process.env.TOKEN] || getCurrentUserdata(req) === null){
+      res.clearCookie(process.env.TOKEN);
+      res.redirect("/");
+      return;
+    }
+  }
+
+  next();
+  return;
+})
 
 // for parsing application/json
-app.use(bodyParser.json()); 
+app.use(bodyParser.json());
 app.use(fileUpload());
 
 // for parsing application/xwww-
-app.use(bodyParser.urlencoded({ extended: true })); 
+app.use(bodyParser.urlencoded({ extended: true }));
 //form-urlencoded
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieParser());
