@@ -3,20 +3,17 @@ const { username, room } = Qs.parse(location.search, {
 });
 
 const chatForm = document.getElementById("chat-form");
-const chatMessages = document.querySelector(".chat-messages");
-const roomName = document.getElementById("room-name");
+const chatMessages = document.querySelector(".messages-container");
 const userList = document.getElementById("users");
 const socket = io();
 
 socket.emit("joinRoom", { username, room });
 
 socket.on("roomUsers", ({ room, users }) => {
-  createRoomName(room);
   createUsers(users);
 });
 
 socket.on("message", (message) => {
-  console.log(message);
   createMessage(message);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 });
@@ -26,7 +23,7 @@ function createMessage(message) {
   let htmlStr =
     message.username === "Bot" ? buildBotMsg(message) : buildUserMsg(message);
   div.innerHTML = htmlStr;
-  document.querySelector(".chat-messages").appendChild(div);
+  document.querySelector(".messages-container").appendChild(div);
 }
 
 function buildBotMsg(message) {
@@ -47,16 +44,16 @@ function buildUserMsg(message) {
           </div>`;
 }
 
-function createRoomName(room) {
-  roomName.innerText = room;
-}
-
 function createUsers(users) {
   userList.innerHTML = "";
+  const addedUser = [];
   users.forEach((user) => {
-    const li = document.createElement("li");
-    li.innerText = user.username;
-    userList.appendChild(li);
+    if (addedUser.indexOf(user.username) == -1) {
+      const li = document.createElement("li");
+      li.innerText = user.username;
+      userList.appendChild(li);
+      addedUser.push(user.username);
+    }
   });
 }
 
@@ -64,7 +61,6 @@ document.getElementById("leave-btn").addEventListener("click", () => {
   const leaveRoom = confirm("Are you sure you want to leave the chatroom?");
   if (leaveRoom) {
     window.location = "/logout";
-  } else {
   }
 });
 
