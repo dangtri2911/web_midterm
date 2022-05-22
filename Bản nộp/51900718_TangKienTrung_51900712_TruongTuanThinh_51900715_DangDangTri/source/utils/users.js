@@ -1,5 +1,5 @@
 const users = [];
-const usersCredentail = {
+const usersCredential = {
     user1: "123456",
     user2: "123456",
     user3: "123456",
@@ -30,5 +30,5 @@ module.exports = {
     getCurrentUser,
     leaveRoom: leaveRoom,
     getListUser: getListUser,
-    usersCredentail,
+    usersCredential,
 };
